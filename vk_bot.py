@@ -18,7 +18,10 @@ def get_dialogflow_response(project_id, session_id, text, language_code='ru-RU')
         request={"session": session, "query_input": query_input}
     )
 
-    return (response.query_result.fulfillment_text or "").strip()
+    fulfillment = (response.query_result.fulfillment_text or "").strip()
+    is_fallback = bool(response.query_result.intent.is_fallback)
+
+    return fulfillment, is_fallback
 
 
 def send_message(vk_api, event, text):
@@ -48,12 +51,16 @@ def main():
             text = (event.text or "").strip()
             session_id = event.user_id if event.from_user else event.chat_id
 
-            reply = get_dialogflow_response(
+            reply, is_fallback = get_dialogflow_response(
                 project_id=project_id,
                 session_id=session_id,
                 text=text,
                 language_code="ru-RU"
             )
+
+            if is_fallback or not reply:
+                continue
+
             send_message(vk_api, event, reply)
 
 
