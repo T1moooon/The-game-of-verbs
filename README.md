@@ -47,18 +47,18 @@ LOG_FILE=имя_файла_логов.log (по умолчанию bot.log)
 
 - **TG_BOT_TOKEN** — токен Telegram-бота. Получить можно у [BotFather](https://t.me/BotFather).  
 - **VK_BOT_TOKEN** — ключ доступа ВКонтакте. Чтобы его получить:  
-  1. Создайте сообщество (если ещё не создано).  
-  2. Зайдите в раздел **Управление → Дополнительно → Работа с API**.  
-  3. Нажмите **Создать ключ**.  
+  - Создайте сообщество (если ещё не создано).  
+  - Зайдите в раздел **Управление → Дополнительно → Работа с API**.  
+  - Нажмите **Создать ключ**.  
 
 - **GOOGLE_APPLICATION_CREDENTIALS** — путь к файлу с ключами для Dialogflow.  
   Чтобы его получить:  
-  1. Создайте проект в [Google Cloud Console](https://console.cloud.google.com/).  
-  2. В меню перейдите **APIs & Services → Library**, найдите **Dialogflow API** и включите его.  
-  3. Перейдите в **IAM & Admin → Service Accounts** и создайте новый аккаунт.  
-  4. Укажите любое имя и выберите роль **Dialogflow API Admin**.  
-  5. Откройте созданный аккаунт, вкладку **Keys** → **Add key → Create new key → JSON**.  
-  6. Скачанный файл сохраните в корень проекта и переименуйте в `credentials.json`.  
+  - Создайте проект в [Google Cloud Console](https://console.cloud.google.com/).  
+  - В меню перейдите **APIs & Services → Library**, найдите **Dialogflow API** и включите его.  
+  - Перейдите в **IAM & Admin → Service Accounts** и создайте новый аккаунт.  
+  - Укажите любое имя и выберите роль **Dialogflow API Admin**.  
+  - Откройте созданный аккаунт, вкладку **Keys** → **Add key → Create new key → JSON**.  
+  - Скачанный файл сохраните в корень проекта и переименуйте в `credentials.json`.  
 
 - **GOOGLE_PROJECT_ID** — ID проекта в Google Cloud (можно найти на главной странице в Dashboard).  
 
@@ -116,4 +116,5 @@ python tg_bot.py
 Для запуска **VK-бота** выполните команду: 
 ```bash
 python vk_bot.py
+
 ```
