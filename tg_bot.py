@@ -4,6 +4,8 @@ from telegram.ext import Updater, MessageHandler, Filters
 from dotenv import load_dotenv
 from google.cloud import dialogflow
 
+from logger import setup_logger
+
 
 def get_dialogflow_response(project_id, session_id, text, language_code='ru-RU'):
     session_client = dialogflow.SessionsClient()
@@ -20,27 +22,41 @@ def get_dialogflow_response(project_id, session_id, text, language_code='ru-RU')
 
 
 def handle_message(update, context):
-    user_text = update.message.text
-    session_id = str(update.effective_chat.id)
-    project_id = os.getenv('GOOGLE_PROJECT_ID')
+    try:
+        user_text = update.message.text
+        session_id = str(update.effective_chat.id)
+        project_id = os.getenv('GOOGLE_PROJECT_ID')
 
-    reply = get_dialogflow_response(project_id, session_id, user_text)
-    context.bot.send_message(chat_id=update.effective_chat.id, text=reply)
+        reply = get_dialogflow_response(project_id, session_id, user_text)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=reply)
+    except Exception:
+        logger.exception('handle_message failed')
 
 
 def main():
-    load_dotenv()
-    bot_token = os.getenv('TG_BOT_API')
+    try:
+        load_dotenv()
 
-    updater = Updater(token=bot_token, use_context=True)
-    dispatcher = updater.dispatcher
+        logs_dir = os.getenv('LOGS_DIR', 'logs')
+        log_file = os.getenv('LOG_FILE', 'bot.log')
+        bot_token = os.getenv('TG_BOT_API')
 
-    dispatcher.add_handler(
-        MessageHandler(Filters.text & ~Filters.command, handle_message)
-        )
+        global logger
+        logger = setup_logger('TG bot', logs_dir, log_file)
 
-    updater.start_polling()
-    updater.idle()
+        updater = Updater(token=bot_token, use_context=True)
+        dispatcher = updater.dispatcher
+
+        dispatcher.add_handler(
+            MessageHandler(Filters.text & ~Filters.command, handle_message)
+            )
+
+        logger.info('TG bot start!')
+
+        updater.start_polling()
+        updater.idle()
+    except Exception as e:
+        logger.critical(e, exc_info=True)
 
 
 if __name__ == '__main__':
