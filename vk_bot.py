@@ -50,7 +50,7 @@ def main():
 
         logs_dir = os.getenv('LOGS_DIR', 'logs')
         log_file = os.getenv('LOG_FILE', 'bot.log')
-        vk_session = vk.VkApi(token=os.getenv("VK_BOT_API"))
+        vk_session = vk.VkApi(token=os.getenv("VK_BOT_TOKEN"))
         project_id = os.getenv("GOOGLE_PROJECT_ID")
 
         global logger

@@ -39,7 +39,7 @@ def main():
 
         logs_dir = os.getenv('LOGS_DIR', 'logs')
         log_file = os.getenv('LOG_FILE', 'bot.log')
-        bot_token = os.getenv('TG_BOT_API')
+        bot_token = os.getenv('TG_BOT_TOKEN')
 
         global logger
         logger = setup_logger('TG bot', logs_dir, log_file)
