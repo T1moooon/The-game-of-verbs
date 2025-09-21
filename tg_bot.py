@@ -10,7 +10,7 @@ from dialogflow_utils import get_dialogflow_response
 def handle_message(update, context):
     try:
         user_text = update.message.text
-        session_id = str(update.effective_chat.id)
+        session_id = f"tg:u:{update.effective_user.id}"
         project_id = os.getenv('GOOGLE_PROJECT_ID')
 
         reply, _ = get_dialogflow_response(project_id, session_id, user_text)

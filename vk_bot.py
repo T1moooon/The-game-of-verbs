@@ -48,7 +48,7 @@ def main():
         for event in longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
                 text = (event.text or "").strip()
-                session_id = event.user_id if event.from_user else event.chat_id
+                session_id = f"vk:u:{event.user_id}"
 
                 reply, is_fallback = get_dialogflow_response(
                     project_id=project_id,
