@@ -1,4 +1,5 @@
 import os
+from functools import partial
 
 from telegram.ext import Updater, MessageHandler, Filters
 from dotenv import load_dotenv
@@ -7,11 +8,10 @@ from logger import setup_logger
 from dialogflow_utils import get_dialogflow_response
 
 
-def handle_message(update, context):
+def handle_message(update, context, project_id):
     try:
         user_text = update.message.text
         session_id = f"tg:u:{update.effective_user.id}"
-        project_id = os.getenv('GOOGLE_PROJECT_ID')
 
         reply, _ = get_dialogflow_response(project_id, session_id, user_text)
         context.bot.send_message(chat_id=update.effective_chat.id, text=reply)
@@ -27,6 +27,7 @@ def main():
         logs_dir = os.getenv('LOGS_DIR', 'logs')
         log_file = os.getenv('LOG_FILE', 'bot.log')
         bot_token = os.getenv('TG_BOT_TOKEN')
+        project_id = os.getenv('GOOGLE_PROJECT_ID')
 
         global logger
         logger = setup_logger('TG bot', logs_dir, log_file)
@@ -34,8 +35,10 @@ def main():
         updater = Updater(token=bot_token, use_context=True)
         dispatcher = updater.dispatcher
 
+        bound_message_handler = partial(handle_message, project_id=project_id)
+
         dispatcher.add_handler(
-            MessageHandler(Filters.text & ~Filters.command, handle_message)
+            MessageHandler(Filters.text & ~Filters.command, bound_message_handler)
             )
 
         logger.info('TG bot start!')
