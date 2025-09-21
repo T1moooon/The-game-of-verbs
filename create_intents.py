@@ -1,3 +1,4 @@
+import argparse
 import json
 import os
 
@@ -5,8 +6,8 @@ from dotenv import load_dotenv
 from google.cloud import dialogflow
 
 
-def create_intent(project_id):
-    with open('questions.json', 'r', encoding='utf-8') as json_file:
+def create_intent(project_id, questions_path):
+    with open(questions_path, 'r', encoding='utf-8') as json_file:
         question_json = json.load(json_file)
 
     intents_client = dialogflow.IntentsClient()
@@ -50,6 +51,22 @@ if __name__ == '__main__':
 
     project_id = os.getenv('GOOGLE_PROJECT_ID')
 
-    intents = create_intent(project_id)
+    parser = argparse.ArgumentParser(
+        description="Создание интентов Dialogflow из JSON файла."
+    )
+    parser.add_argument(
+        "-f", "--file",
+        dest="questions_path",
+        default="questions.json",
+        help="Путь до JSON с вопросами/ответами (по умолчанию: questions.json)"
+    )
+    args = parser.parse_args()
+
+    if not os.path.isfile(args.questions_path):
+        raise FileNotFoundError(
+            f"Файл не найден: {args.questions_path}. Укажи верный путь флагом --file."
+        )
+
+    intents = create_intent(project_id, args.questions_path)
     for intent in intents:
         print(f'"{intent}" создан!')
