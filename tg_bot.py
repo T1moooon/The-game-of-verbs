@@ -17,6 +17,7 @@ def handle_message(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text=reply)
     except Exception:
         logger.exception('handle_message failed')
+        raise
 
 
 def main():
@@ -43,6 +44,7 @@ def main():
         updater.idle()
     except Exception as e:
         logger.critical(e, exc_info=True)
+        raise
 
 
 if __name__ == '__main__':

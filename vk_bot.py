@@ -25,6 +25,7 @@ def send_message(vk_api, event, text):
             )
     except Exception:
         logger.exception('send message')
+        raise
 
 
 def main():
@@ -60,8 +61,9 @@ def main():
                     continue
 
                 send_message(vk_api, event, reply)
-    except Exception as e:
-        logger.critical(e, exc_info=True)
+    except Exception:
+        logger.critical("Fatal error in VK", exc_info=True)
+        raise
 
 
 if __name__ == "__main__":
