@@ -4,14 +4,11 @@ import traceback
 from logging.handlers import RotatingFileHandler
 
 from telegram import Bot
-from dotenv import load_dotenv
 
 
 class LogHandler(logging.Handler):
     def __init__(self):
         super().__init__()
-
-        load_dotenv()
 
         self.bot = Bot(token=os.getenv("LOG_BOT_TOKEN"))
         self.chat_id = os.getenv("TG_CHAT_ID")
