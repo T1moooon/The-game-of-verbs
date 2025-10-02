@@ -36,9 +36,17 @@ def main():
         log_file = os.getenv('LOG_FILE', 'bot.log')
         vk_session = vk.VkApi(token=os.getenv("VK_BOT_TOKEN"))
         project_id = os.getenv("GOOGLE_PROJECT_ID")
+        log_bot_token = os.getenv('LOG_BOT_TOKEN')
+        log_chat_id = os.getenv('TG_CHAT_ID')
 
         global logger
-        logger = setup_logger('VK bot', logs_dir, log_file)
+        logger = setup_logger(
+            'VK bot',
+            logs_dir,
+            log_file,
+            log_bot_token=log_bot_token,
+            log_chat_id=log_chat_id
+        )
 
         vk_api = vk_session.get_api()
         longpoll = VkLongPoll(vk_session)

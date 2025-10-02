@@ -7,11 +7,11 @@ from telegram import Bot
 
 
 class LogHandler(logging.Handler):
-    def __init__(self):
+    def __init__(self, bot_token, chat_id):
         super().__init__()
 
-        self.bot = Bot(token=os.getenv("LOG_BOT_TOKEN"))
-        self.chat_id = os.getenv("TG_CHAT_ID")
+        self.bot = Bot(token=bot_token)
+        self.chat_id = chat_id
 
     def emit(self, record):
         try:
@@ -44,7 +44,7 @@ def create_log_file(logs_dir, log_file):
     return log_file
 
 
-def setup_logger(name, logs_dir, log_file):
+def setup_logger(name, logs_dir, log_file, log_bot_token=None, log_chat_id=None):
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
 
@@ -55,10 +55,11 @@ def setup_logger(name, logs_dir, log_file):
     )
     file_handler.setFormatter(file_formatter)
 
-    tg_vk_handler = LogHandler()
-    tg_vk_handler.setLevel(logging.ERROR)
-
     logger.addHandler(file_handler)
-    logger.addHandler(tg_vk_handler)
+
+    if log_bot_token and log_chat_id:
+        tg_vk_handler = LogHandler(log_bot_token, log_chat_id)
+        tg_vk_handler.setLevel(logging.ERROR)
+        logger.addHandler(tg_vk_handler)
 
     return logger
